@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 class LambdaTerm(ABC):
     @abstractmethod
-    def fromstring(s):
+    def fromstring(self):
         pass
 
     def substitute(self, rules):
