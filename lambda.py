@@ -1,8 +1,20 @@
 from abc import ABC, abstractmethod
 class LambdaTerm(ABC):
-    @abstractmethod
-    def fromstring(self):
-        pass
+    @staticmethod
+    def fromstring(s):
+        s = s.replace('\\', 'λ').strip()
+        if s.startswith('λ'):
+            parts = s[1:].split('.', 1)
+            variables = parts[0].strip().split(' ')
+            body = LambdaTerm.fromstring(parts[1].strip())
+            for var in reversed(variables):
+                body = Abstraction(Variable(var), body)
+            return body
+        elif ' ' in s:
+            func, arg = s.split(' ', 1)
+            return Application(LambdaTerm.fromstring(func.strip()), LambdaTerm.fromstring(arg.strip()))
+        else:
+            return Variable(s)
 
     def substitute(self, rules):
         pass
@@ -16,7 +28,7 @@ class Variable(LambdaTerm):
         self.symbol = symbol
 
     def __repr__(self):
-        return f"Variable({self.symbol})"
+        return f"Variable('{self.symbol}')"
 
     def __str__(self):
         return self.symbol
@@ -33,10 +45,13 @@ class Abstraction(LambdaTerm):
         self.body = body
 
     def __repr__(self):
-        return f"Abstraction({self.variable}, {self.body})"
+        return f"Abstraction({self.variable.__repr__()}, {self.body.__repr__()})"
 
     def __str__(self):
-        return f"(λ{self.variable}.{self.body})"
+        if isinstance(self.body, Variable) or isinstance(self.body, Abstraction):
+            return f"λ{self.variable}.{self.body}"
+        else:
+            return f"λ{self.variable}.({self.body})"
 
     def __call__(self, argument):
         return self.body.substitute({self.variable.symbol: argument})
