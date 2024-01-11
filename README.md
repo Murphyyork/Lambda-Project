@@ -1,5 +1,6 @@
 # Lambda Calculus Project Report
-
+## Author: Futao Yan, Kristian
+## Github: yorkmurphy0@gmail.com, kristianderoos@gmail.com
 ## Introduction
 
 Lambada Calculus, akin to the Turing Machine, utilizes a mechanized approach to prove and deduce complex problems in mathematics.
