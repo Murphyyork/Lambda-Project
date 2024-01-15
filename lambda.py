@@ -17,16 +17,17 @@ class LambdaTerm(ABC):
             return Variable(s)
 
     def substitute(self, rules):
-        pass
+        return rules.get(self)
 
     def reduce(self):
-        pass
+        return eval(self.body)
+        
 
 class Variable(LambdaTerm):
     """Represents a variable."""
     def __init__(self, symbol):
         self.symbol = symbol
-
+        
     def __repr__(self):
         return f"Variable('{self.symbol}')"
 
@@ -34,8 +35,19 @@ class Variable(LambdaTerm):
         return self.symbol
 
     def substitute(self, rules):
-        return rules.get(self.symbol, self)
-
+        if self.symbol in rules:
+            return rules.get(self.symbol)
+        else:
+            return self.symbol
+    
+    def __add__(self, other):
+        return f"{self.symbol} + {other}"
+    def __sub__(self, other):
+        return f"{self.symbol} - {other}"
+    def __mul__(self, other):
+        return f"{self.symbol} * {other}"
+    def __truediv__(self, other):
+        return f"{self.symbol} / {other}"
 
 class Abstraction(LambdaTerm):
     """Represents a lambda term of the form (λx.M)."""
@@ -48,19 +60,22 @@ class Abstraction(LambdaTerm):
         return f"Abstraction({self.variable.__repr__()}, {self.body.__repr__()})"
 
     def __str__(self):
-        if isinstance(self.body, Variable) or isinstance(self.body, Abstraction):
-            return f"λ{self.variable}.{self.body}"
-        else:
+        if isinstance(self.body, Application):
             return f"λ{self.variable}.({self.body})"
+        else:
+            return f"λ{self.variable}.{self.body}"
 
     def __call__(self, argument):
-        return self.body.substitute({self.variable.symbol: argument})
+        return self.body.substitute({self.body : argument})
 
     def substitute(self, rules):
-        if self.variable.symbol in rules:
-            # Avoid variable capture
-            del rules[self.variable.symbol]
-        return Abstraction(self.variable, self.body.substitute(rules))
+        if isinstance(self.body, str):
+            for key in rules:
+                if key in self.body:
+                    self.body = self.body.replace(key, rules.get(key))
+            return Abstraction(self.variable.substitute(rules), self.body)
+        else:
+            return Abstraction(self.variable.substitute(rules), self.body.substitute(rules))
 
 class Application(LambdaTerm):
     """Represents a lambda term of the form (M N)."""
@@ -73,15 +88,16 @@ class Application(LambdaTerm):
         return f"Application({self.function}, {self.argument})"
 
     def __str__(self):
-        return f"({self.function} {self.argument})"
+        return f"({self.function}) {self.argument}"
 
     def substitute(self, rules):
         return Application(self.function.substitute(rules), self.argument.substitute(rules))
 
     def reduce(self):
-        if isinstance(self.function, Abstraction):
-            return self.function(self.argument).reduce()
-        return Application(self.function.reduce(), self.argument.reduce())
+        self.function = self.function.substitute({f"{self.function.variable}" : f"{self.argument}"})
+        return self.function.reduce()
+
+
 
 
 
