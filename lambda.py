@@ -70,9 +70,9 @@ class Abstraction(LambdaTerm):
 
     def substitute(self, rules):
         if isinstance(self.body, str):
-            for key in rules:
-                if key in self.body:
-                    self.body = self.body.replace(key, rules.get(key))
+            for symbol in self.body:
+                if symbol in rules:
+                    self.body = self.body.replace(symbol, rules.get(symbol))
             return Abstraction(self.variable.substitute(rules), self.body)
         else:
             return Abstraction(self.variable.substitute(rules), self.body.substitute(rules))
