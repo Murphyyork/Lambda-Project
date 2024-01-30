@@ -1,4 +1,4 @@
-# Lambda Calculus Project Report
+\ Lambda Calculus Project Report
 ## Author: Futao Yan, Kristian
 ## Github: yorkmurphy0@gmail.com, kristianderoos@gmail.com
 ## Introduction
@@ -143,14 +143,16 @@ The primary difficulty in the `fromstring` method was correctly parsing the stri
 
 ## Results
 
-The successful implementation of the λ-calculus interpreter is a significant achievement. It effectively processes lambda expressions, demonstrating the practical application of complex theoretical concepts. This outcome not only showcases the interpreter's ability to handle a variety of λ-calculus expressions but also validates the functionality of the implemented methods, such as substitution and beta-reduction. The results affirm the robustness of the design and provide a tangible connection between abstract mathematical theory and concrete computational practice.
-
-## Conclusion
-
-This project has been an enriching learning experience, providing me with a deeper understanding of computational concepts, specifically λ-calculus. The process of translating theoretical concepts into a functional interpreter challenged and enhanced my programming skills. It also offered valuable insights into the foundations of functional programming languages. This journey through the intricacies of λ-calculus has not only bolstered my problem-solving abilities but has also deepened my appreciation for the underlying principles of computer science.
+In this project, we have achieved to write a basis for the λ-calculus, and therefore have layed a foundation for an abstract formal system. Three classes have been succesfully implemented (Variable, Abstraction and Application) and with it, the most important functions have been computed, namely the substitution and beta-reduction. In addition, a fromString method has been added. In almost all trials, these functions have worked flawlessly, for very simple expressions as well as more advanced, nested expressions. Only the most complicated expressions, for example expressions consisting of more than five nested expressions, may not work flawlessly in our program.
 
 
-## Future Work
+## Conclusion and discussion
+
+In conclusion, with three basic classes and functions for substitution and reduction of expressions, we have computed the basis for a λ-calculus; a formal system that can take abstract expressions as input and convert them into or apply them on other expressions. However, our program does have some limitations.
+
+First of all, arithmetical and logical operators have not been added, so exact mathematics cannot yet be expressed in this λ-calculus. This would make a good next addition to the program; how such arithmetical and logical operators can be expressed in λ-terms, is described clearly in ["A Tutotrial Introduction to the Lambda Calculus"] by R. Rojas. 
+
+Furthermore, as previously mentioned, λ-terms in which capture-avoiding substitution must take place more than once, will not have a correct output. This is very easily fixed: one can simply add more lines in which symbols are replaced not with "t", but with other symbols. There will, of course, always be some limit to the amount of capture-avoiding substitution one can do.
 
 In future developments of the λ-calculus interpreter, I aim to integrate a type system. This addition is expected to not only enhance the robustness of the interpreter but also contribute significantly to the field of programming language design. Incorporating a type system will allow the interpreter to handle a wider range of computational concepts and offer more precise error handling and validation capabilities. This enhancement aligns with advancing the interpreter towards a more sophisticated tool for exploring and experimenting with functional programming paradigms.
 
