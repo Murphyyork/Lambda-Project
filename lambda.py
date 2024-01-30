@@ -91,7 +91,10 @@ class Application(LambdaTerm):
     def reduce(self):
         #alfa-conversion
         if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
-            self.function = self.function.substitute({f"{self.argument}" : "t"})
+            if "t" not in str(self.function):
+                self.function = self.function.substitute({f"{self.argument}" : "t"})
+            else:
+                self.function = self.function.substitute({f"{self.argument}" : "s"})
         
         #loop to ensure only free variables are replaced
         if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
