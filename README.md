@@ -20,7 +20,7 @@ Shortly after Church's publication, in 1936, another pioneering computer scienst
 
 In computer science's evolution, the late 1950s marked a pivotal point with John McCarthy's development of Lisp at MIT. This language, inspired by Alonzo Church's λ-calculus, showcased the practical implementation of theoretical computational concepts on von Neumann computers. The creation of Lisp machines at MIT's AI lab further materialized λ-calculus in hardware form. While adapting to changing computing architectures, Lisp evolved, integrating functional and traditional programming aspects, symbolizing the adaptability and potential of functional languages in advancing computational theory.
 
-Writing a λ-calculus program might at first sight seem like a fairly simple task, as it only consists of substitution and reduction of λ-terms. However, the difficulty lies in understanding the λ-calculus as an abstract machine and writing a program that works for even the most complex λ-terms. 
+Writing a λ-calculus program might at first sight seem like a fairly simple task, as it only consists of substitution and reduction of λ-terms. However, the difficulty lies in understanding the λ-calculus as an abstract machine and writing a program that works for even the most complex λ-terms. The λ-calculus, however simple, has a wide range of capabilities.
 
 ## Algorithm and Implementation
 
