@@ -112,7 +112,7 @@ The first argument will be applied to the second argument, as applications in th
 
 Substitute variables within expressions:
 ```python
-substitution = x.substitute({"x": Variable("y")}) # output is y
+substitution = x.substitute({"x": "y"}) # output is y
 substitution2 = abstraction.substitute({"x" : "y"}) # output is λy.y
 ```
 
