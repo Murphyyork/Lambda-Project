@@ -18,7 +18,7 @@ Alonzo Church, a pioneering mathematician and logician, answered this  question 
 
 Shortly after Church's publication, in 1936, another pioneering computer scienstist named Alan Turing, developed his Turing Machine, which is a theoretical machine that in essence works the same as the λ-calculus, although Turing developed this machine independently from Church's λ-calculus. On the basis of this Turing Machine, Alan Turing managed to answer the decision problem negatively: he showed that it is impossible to derive for every logical statement if it is provable or not.
 
-In computer science's evolution, the late 1950s marked a pivotal point with John McCarthy's development of Lisp at MIT. This language, inspired by Alonzo Church's λ-calculus, showcased the practical implementation of theoretical computational concepts on von Neumann computers. The creation of Lisp machines at MIT's AI lab further materialized λ-calculus in hardware form. While adapting to changing computing architectures, Lisp evolved, integrating functional and traditional programming aspects, symbolizing the adaptability and potential of functional languages in advancing computational theory.
+Writing a λ-calculus program might at first sight seem like a fairly simple task, as it only consists of substitution and reduction of λ-terms. However, the difficulty lies in understanding the λ-calculus as an abstract machine and write a program that works for even the most complex λ-terms. 
 
 ## Algorithm and Implementation
 
