@@ -123,7 +123,14 @@ reduced2 = application2.reduce() # reduces "(λy.λx.xy) z", which results in ou
 reduced3 = application2.reduce # reduces (λy.λx.xy) x, which results in output λt.tx
 ```
 β-reductions reduce the application expression by substituting, in the body of the function, the argument (in the first example "y", in the second example "z") with the variable of the function ("λx" and "λy" respectively), which results in function body's with substituted variables ("y" and "λx.xz").
-When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must takes measures as to not mix up these two different variables. Therefore, we first substitute the bound "x" with another symbol, which will be "t". The output that follows, is "λt.tx". Note that in such cases, if a bound variable needs to be substituted before the reduction, the program will always substitute the present variable with a "t". This means that λ-terms, in which there is already a variable "t" present or in which such a substitute must take place more than once, will not have a correct reduction outcome. 
+When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must takes measures as to not mix up these two different variables. Therefore, we first substitute the bound "x" with another symbol, which will be "t". The output that follows, is "λt.tx". Note that in such cases, if a bound variable needs to be substituted before the reduction, the program will always substitute the present variable with a "t". This means that λ-terms, in which there is already a variable "t" present or in which such a substitute must take place more than once, will not have a correct reduction outcome. However, it is quite rare that such a substitution should happen more than once with the same string. If the user avoids using "t" as a variable in the λ-terms, the program will work in most cases.
+
+Turn a string into a λ-term using the fromString method:
+```python
+a = LambdaTerm.fromString(r'\a b. a b') # turns string into the λ-term λa.λb.ab
+b = LambdaTerm.fromstring(r"(\ a b. a b) (\x y. x y)") # (λa.λb.ab) λx.λy.xy
+```
+With this function, we can type a λ-term as a string and turn it into a λ-term; either a variable, abstraction or application. There are, however, a few notes to the use of this function. First of all, the "λ" is signified with a "\", because the "λ" is not easily accesible on a keyboard, but as the "\" symbol has a function in python of escaping the next character, it is important to use an r-string or raw string, so the "\" symbol will be read as a character of the string. Second, it is important that we use a space between each expression or variable, or the output will not be correct.
 
 
 ## Challenges and Solutions
