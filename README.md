@@ -89,7 +89,7 @@ y = Variable("y") # y
 ```
 
 
-Create function abstractions by giving two arguments (first variable, then any other expression):
+Create function abstractions by giving two arguments (first a variable, then any other expression):
 ```python
 abstraction = Abstraction(x, x)  # λx.x
 abstraction2 = Abstraction(y, abstraction) # λy.λx.x
