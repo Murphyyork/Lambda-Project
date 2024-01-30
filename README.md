@@ -100,7 +100,7 @@ abstraction4 = Abstraction(x, "xy") # λx.xy
 abstraction5 = Abstraction(y, abstraction4) # λy.λx.xy
 
 ```
-As shown above, if the body of an abstraction consists of multiple variables, one can write this as a string, "xy", or as one variable. They will be treated as single variables in the substitution and reduction functions, but as the Abstraction class only takes two arguments, the body must be one entity.
+As shown above, if the body of an abstraction consists of multiple variables, we can write this as a string, "xy", or as one variable. They will be treated as single variables in the substitution and reduction functions, but as the Abstraction class only takes two arguments, the body must be one entity.
 
 Create function applications by giving two arguments:
 ```python
