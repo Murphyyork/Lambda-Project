@@ -4,7 +4,12 @@ class LambdaTerm(ABC):
     def fromstring(s):
         s = s.replace('\\', 'λ').strip()
         if s.startswith("(") and s.endswith(")"):
-            s = s[1:-1]
+            if ") (" in s:
+                x = s.index(") (")
+                
+                return Application(LambdaTerm.fromstring(s[:x + 1]), LambdaTerm.fromstring(s[x + 1:]))
+            else:
+                s = s[1:-1]
             
         #Abstraction
         if s.startswith('λ'):
