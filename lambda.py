@@ -3,6 +3,10 @@ class LambdaTerm(ABC):
     @staticmethod
     def fromstring(s):
         s = s.replace('\\', 'λ').strip()
+        if s.startswith("(") and s.endswith(")"):
+            s = s[1:-1]
+            
+        #Abstraction
         if s.startswith('λ'):
             parts = s[1:].split('.', 1)
             variables = parts[0].strip().split(' ')
@@ -10,18 +14,18 @@ class LambdaTerm(ABC):
             for var in reversed(variables):
                 body = Abstraction(Variable(var), body)
             return body
-        elif ' ' in s:
-            func, arg = s.split(' ', 1)
+            
+        #Application
+        elif s.startswith("("):
+            func = s[:-1]
+            arg = s[len(s) - 1]
             return Application(LambdaTerm.fromstring(func.strip()), LambdaTerm.fromstring(arg.strip()))
+            
+        #Variable(s)
         else:
+            s = s.replace(" ", "")
             return Variable(s)
 
-    def substitute(self, rules):
-        return rules.get(self)
-
-    def reduce(self):
-        return eval(self.body)
-        
 
 class Variable(LambdaTerm):
     """Represents a variable."""
@@ -35,20 +39,11 @@ class Variable(LambdaTerm):
         return self.symbol
 
     def substitute(self, rules):
-        if self.symbol in rules:
-            return rules.get(self.symbol)
-        else:
-            return self.symbol
-    
-    def __add__(self, other):
-        return f"{self.symbol} + {other}"
-    def __sub__(self, other):
-        return f"{self.symbol} - {other}"
-    def __mul__(self, other):
-        return f"{self.symbol} * {other}"
-    def __truediv__(self, other):
-        return f"{self.symbol} / {other}"
-
+        for i in str(self.symbol):
+            if i in rules:
+                self.symbol = self.symbol.replace(i, rules.get(i))
+        return self.symbol
+   
 class Abstraction(LambdaTerm):
     """Represents a lambda term of the form (λx.M)."""
 
@@ -69,13 +64,7 @@ class Abstraction(LambdaTerm):
         return self.body.substitute({self.body : argument})
 
     def substitute(self, rules):
-        if isinstance(self.body, str):
-            for symbol in self.body:
-                if symbol in rules:
-                    self.body = self.body.replace(symbol, rules.get(symbol))
-            return Abstraction(self.variable.substitute(rules), self.body)
-        else:
-            return Abstraction(self.variable.substitute(rules), self.body.substitute(rules))
+        return Abstraction(self.variable.substitute(rules), self.body.substitute(rules))
 
 class Application(LambdaTerm):
     """Represents a lambda term of the form (M N)."""
@@ -94,8 +83,33 @@ class Application(LambdaTerm):
         return Application(self.function.substitute(rules), self.argument.substitute(rules))
 
     def reduce(self):
-        self.function = self.function.substitute({f"{self.function.variable}" : f"{self.argument}"})
-        return self.function.reduce()
+        #alfa-conversion
+        if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
+            self.function = self.function.substitute({f"{self.argument}" : "t"})
+        
+        #loop to ensure only free variables are replaced
+        if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
+            a = self.function.body
+            while "." in f"{a}":
+                if isinstance(a, Abstraction):
+                    if f"{a.variable}" == f"{self.function.variable}":
+                        break
+                    else:
+                        if isinstance(a.body, Abstraction) or isinstance(a.body, Application):
+                            a = a.body
+                        else:
+                            a = a.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                            break
+                if isinstance(a, Application):
+                    a.argument = a.argument.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                    a = a.function
+                
+            return self.function.body
+        
+        #beta-reduction  
+        else:
+            self.function = self.function.substitute({f"{self.function.variable}" : f"{self.argument}"})
+            return self.function.body
 
 
 
