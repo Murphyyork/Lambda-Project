@@ -3,10 +3,11 @@ class LambdaTerm(ABC):
     @staticmethod
     def fromstring(s):
         s = s.replace('\\', 'λ').strip()
+
+        #Remove parentheses or turn into application if written as (...)(...)
         if s.startswith("(") and s.endswith(")"):
             if ") (" in s:
                 x = s.index(") (")
-                
                 return Application(LambdaTerm.fromstring(s[:x + 1]), LambdaTerm.fromstring(s[x + 1:]))
             else:
                 s = s[1:-1]
