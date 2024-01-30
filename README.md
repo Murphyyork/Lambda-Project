@@ -123,7 +123,7 @@ reduced2 = application2.reduce() # reduces "(λy.λx.xy) z", which results in ou
 reduced3 = application2.reduce # reduces (λy.λx.xy) x, which results in output λt.tx
 ```
 β-reductions reduce the application expression by substituting, in the body of the function, the argument (in the first example "y", in the second example "z") with the variable of the function ("λx" and "λy" respectively), which results in function body's with substituted variables ("y" and "λx.xz").
-When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must takes measures as to not mix up these two different variables. Therefore, we first substitute the bound and present "x" with another symbol, which will be "t". The output that follows, is "λt.tx".
+When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must takes measures as to not mix up these two different variables. Therefore, we first substitute the bound "x" with another symbol, which will be "t". The output that follows, is "λt.tx". Note that we will always 
 
 
 ## Challenges and Solutions
