@@ -152,5 +152,5 @@ In future developments of the λ-calculus interpreter, I aim to integrate a type
 
 - For an in-depth understanding of Lambda Calculus and its application in functional programming, refer to ["Lambda Calculus and Functional Programming"](https://lushunjian.gitee.io/2020/04/12/lyan-suan-yu-han-shu-shi-bian-cheng/), which provides comprehensive insights into the basics of λ-calculus.
 - For beginners, a helpful guide to understanding λ-calculus can be found at ["Lambda Calculus for Absolute Dummies"](https://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html).
-- For a basic understanding of substitution, reduction, arithmetic and logical operators in the Lambda Calculus, refer to ["A Tutotrial Introduction to the Lambda Calculus"] (https://arxiv.org/pdf/1503.09060.pdf).
+- For a basic understanding of substitution, reduction, arithmetic and logical operators in the Lambda Calculus, refer to ["A Tutotrial Introduction to the Lambda Calculus"], R. Rojas, Freie Universität Berlin 2015, (https://arxiv.org/pdf/1503.09060.pdf).
   
