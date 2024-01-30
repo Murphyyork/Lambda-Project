@@ -45,10 +45,10 @@ class Variable(LambdaTerm):
         return self.symbol
 
     def substitute(self, rules):
-        for i in str(self.symbol):
-            if i in rules:
-                self.symbol = self.symbol.replace(i, rules.get(i))
-        return self.symbol
+        for var in str(self.symbol):
+            if var in rules:
+                self.symbol = self.symbol.replace(var, rules.get(var))
+        return Variable(self.symbol)
    
 class Abstraction(LambdaTerm):
     """Represents a lambda term of the form (λx.M)."""
