@@ -84,53 +84,47 @@ This guide demonstrates how to use the λ-calculus interpreter:
 #### Creating Variables
 Create variables using the `Variable` class:
 ```python
-x = Variable("x")
+x = Variable("x") # x
+y = Variable("y") # y
+```
 
+
+Create function abstractions by giving two arguments (first variable, then any other expression):
+```python
 abstraction = Abstraction(x, x)  # λx.x
+abstraction2 = Abstraction(y, abstraction) # λy.λx.x
 
-application = Application(abstraction, x)  # (λx.x) x
+xy = Variable("xy")
+abstraction3 = Abstraction(x, xy) # λx.xy
+abstraction4 = Abstraction(x, "xy") # λx.xy
+abstraction5 = Abstraction(y, abstraction4) # λy.λx.xy
 
-reduced = application.reduce()
-print(reduced)
-
-substitution = x.substitute({"x": Variable("y")})
 ```
-This code creates a variable x.
+As shown above, if the body of an abstraction consists of multiple variables, one can write this as a string, "xy", or as one variable. They will be treated as single variables in the substitution and reduction functions, but as the Abstraction class only takes two arguments, the body must be one entity.
 
-Function Abstractions
-
-To create a function abstraction:
+Create function applications by giving two arguments:
 ```python
-abstraction = Abstraction(x, x)  # Represents λx.x
+application = Application(abstraction, y)  # Applies (λx.x) to y, which results in the output (λx.x) y
+application2 = Application(abstraction5, z) # Applies (λy.λx.xy) to z, which results in the output (λy.λx.xy) z
+application3 = Application(abstraction5, x) # Applies (λy.λx.xy) to x, which results in the output (λy.λx.xy) x
 ```
-This abstraction uses x for both the variable and the body.
-
-Function Applications
-
-To apply a function to an argument:
-```python
-application = Application(abstraction, x)  # Applies (λx.x) to x
-```
-This applies the abstraction to the variable 'x'.
-
-Performing β-Reduction
-
-Execute β-reductions with the reduce method:
-```python
-reduced = application.reduce()
-print(reduced)
-```
-This reduces the application expression.
-
-Substituting Variables
+The first argument will be applied to the second argument, as applications in the λ-calculus are left associative.
 
 Substitute variables within expressions:
 ```python
-substitution = x.substitute({"x": Variable("y")})
+substitution = x.substitute({"x": Variable("y")}) # output is y
+substitution2 = abstraction.substitute({"x" : "y"}) # output is λy.y
 ```
-This substitutes x with a new variable y.
 
-This comprehensive guide covers each step to use the different functionalities of your λ-calculus interpreter, with appropriate code snippets and explanations.
+Execute β-reductions with the reduce method:
+```python
+reduced = application.reduce() # reduces "(λx.x) y", which results in output "y"
+reduced2 = application2.reduce() # reduces "(λy.λx.xy) z", which results in output "λx.xz"
+reduced3 = application2.reduce # reduces (λy.λx.xy) x, which results in output λt.tx
+```
+β-reductions reduce the application expression by substituting, in the body of the function, the argument (in the first example "y", in the second example "z") with the variable of the function ("λx" and "λy" respectively), which results in function body's with substituted variables ("y" and "λx.xz").
+When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must takes measures as to not mix up these two different variables. Therefore, we first substitute the bound and present "x" with another symbol, which will be "t". The output that follows, is "λt.tx".
+
 
 ## Challenges and Solutions
 
