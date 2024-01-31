@@ -96,7 +96,7 @@ abstraction2 = Abstraction(y, abstraction) # λy.λx.x
 
 xy = Variable("xy")
 abstraction3 = Abstraction(x, xy) # λx.xy
-abstraction4 = Abstraction(x, "xy") # λx.xy ! This will not work correctly in substitute function !
+abstraction4 = Abstraction(x, "xy") # λx.xy ! This will not work correctly in the substitute function !
 abstraction5 = Abstraction(y, abstraction4) # λy.λx.xy
 
 ```
