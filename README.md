@@ -112,7 +112,7 @@ What follows is a reduction for nested expressions, in which only free variables
                 
             return self.function.body
 ```
-The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if 
+The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if it is a variable in the body of an abstraction (e.g., if "a" is the body of λx.x) or if it is an argument in an application (e.g., if "a" is the argument of (λx.x) y).
 ## Manual
 
 ### User Guide
