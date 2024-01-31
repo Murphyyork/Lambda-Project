@@ -225,7 +225,7 @@ Substitute variables within expressions:
 substitution = x.substitute({"x": "y"}) # output is y
 substitution2 = abstraction.substitute({"x" : "y"}) # output is λy.y
 ```
-The substitution input must be written as a dictionary with strings as keys and values. If this is not the cae, the program will raise an error.
+The substitution input must be written as a dictionary with strings as keys and values. If this is not the case, the program will raise an error.
 
 ### Reduction
 Execute β-reductions with the reduce method:
