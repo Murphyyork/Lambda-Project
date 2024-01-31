@@ -41,7 +41,7 @@ Application: Deals with the application of one λ-term to another.
 In each class, methods like substitute and reduce were implemented to facilitate the core operations of λ-calculus, such as substitution and β-reduction. This approach ensures the interpreter can process λ-calculus expressions, reflecting both the structural and operational aspects of λ-calculus theory.
 
 ### Variables
-In the implementation of the variable class, the focus was on representing variables in λ-calculus expressions. Each variable is identified by a unique symbol, encapsulated within the class. The __init__ method initializes a variable with its symbol, while the __repr__ and __str__ methods provide string representations for ease of understanding. These functions are easy to read and have a time complexity of O(n) = 1. 
+In the implementation of the Variable class, the focus was on representing variables in λ-calculus expressions. Each variable is identified by a unique symbol, encapsulated within the class. The __init__ method initializes a variable with its symbol, while the __repr__ and __str__ methods provide string representations for ease of understanding. These functions are easy to read and have a time complexity of O(n) = 1. 
 
 The substitute method is a bit more complicated: 
 ```python
