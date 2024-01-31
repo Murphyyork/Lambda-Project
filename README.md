@@ -83,7 +83,7 @@ def substitute(self, rules):
         return Application(self.function.substitute(rules), self.argument.substitute(rules))
 ```
 
-The reduction method is more complicated. The first part makes sure that the argument on which the functions is applied, does not occur in the function itself, as that can lead to different variables symbolized by the same character. This substitution is called capture-avoiding substitution:
+The reduction method is more complicated, let us especially pay close attention to reduction when the function is an abstraction. The first part makes sure that the argument on which the functions is applied, does not occur in the function itself, as that can lead to different variables symbolized by the same character. This substitution is called capture-avoiding substitution:
 ```python
         if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
             self.function = self.function.substitute({f"{self.argument}" : "t"})
@@ -93,26 +93,28 @@ The program searches for the argument in the body of the function, which has a t
 What follows is a reduction for nested expressions, in which only free variables, variables that are not bound due to an abstraction, have to be substituted. For example, in the expression λx.xy, variable x is bound, while variable y remains unbound. Reduction for nested expressions looks as follows:
 ```python
         if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
-            
-            #loop to ensure only free variables are replaced
-            a = self.function.body
-            while isinstance(a, Variable) == False:
-                if isinstance(a, Abstraction):
-                    if f"{a.variable}" == f"{self.function.variable}":
-                        break
-                    else:
-                        if isinstance(a.body, Abstraction) or isinstance(a.body, Application):
-                            a = a.body
-                        else:
-                            a = a.substitute({f"{self.function.variable}" : f"{self.argument}"})
-                            break
-                if isinstance(a, Application):
-                    a.argument = a.argument.substitute({f"{self.function.variable}" : f"{self.argument}"})
-                    a = a.function
                 
-            return self.function.body
+                #loop to ensure only free variables are replaced
+                a = self.function.body
+                while isinstance(a, Variable) == False:
+                    if isinstance(a, Abstraction):
+                        if f"{a.variable}" == f"{self.function.variable}":
+                            break
+                        else:
+                            if isinstance(a.body, Abstraction) or isinstance(a.body, Application):
+                                a = a.body
+                            else:
+                                a = a.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                                break
+                    if isinstance(a, Application):
+                        a.argument = a.argument.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                        a = a.function
+                    
+                return self.function.body
 ```
-The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if it is a variable in the body of an abstraction (e.g., if "a" is the body of λx.x) or if it is an argument in an application (e.g., if "a" is the argument of (λx.x) y).
+The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if it is a variable in the body of an abstraction (e.g., if "a" is the body of λx.x) or if it is an argument in an application (e.g., if "a" is the argument of (λx.x) y). The while loop as shown above, halts when "a" is a variable, because then the innermost part of the expressions has been reached. The time complexity of substitution in this loop is O(n) = n, n being the number of characters of "a". How often such a substitution takes place, depends on the number of nested expressions and types of expressions. 
+
+This complex structure begs the question if there is not a simpler method to substitute only free variables, unfortunately, we have not found one. The difficulty in this specific substitution is understanding how one can access all the different parts of an expression, as the "self" in this class only has two attributes: an argument and a function. It is tempting to think that it would be much easier to encorporate these rules of substituting free or bound variables in the variable class itself, but in the variable class it is impossible to know if the variable is bound or not, as the expression in which the variable occurs is not known in the variable class itself. It may be possible to write these rules in the abstraction class, which is then called upon in the reduction method. However, a consequence might be that substitution as a method independent of reduction might not function as well.
 ## Manual
 
 ### User Guide
