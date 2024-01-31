@@ -166,7 +166,7 @@ The next part deals with abstractions, applications and variables respectively:
             s = s.replace(" ", "")
             return Variable(s)
 ```
-In the abstraction part, variables are listed in "variables". The last two variables of the list form an abstraction, with which the variable prior forms an abstraction iteratively. This for loop has time complexity O(n), n being the number of variables in the list.
+In the abstraction part, variables are listed in "variables". The last two variables of the list form an abstraction, with which the variable prior forms an abstraction iteratively. This 'for loop' has time complexity O(n), n being the number of variables in the list.
 
 For applications, the ")" needs to be found in the string to cut the string on the right spot. This rindex function costs O(n) as well. 
 
