@@ -60,7 +60,7 @@ def substitute(self, rules):
         
         return Variable(self.symbol)
 ```
-As visualized above, the function first makes sure that the input is correct; it requires a dictionary with both keys and values as strings. A for loop is used for this, which give this a time complexity of O(n) = n, n being the number of key-value pairs in the dictionary. In the substitution itself, for each character in the variable, the dictionary is searched. If the character is a key in the dictionary, the replace function is called, which itself has a time complexity of O(m) = m, with m being the number of characters in the string, as it loops through the string. This whole substitution method has a total time complexity O(n,m) = n + n * (m ** 2) , n being the number of key-value pairs in the dictionary and m the number of characters in the variable. Usually, a variable ony has one character, but as discussed in the manual below, certain expressions will be recognized as one variable by the program. For example, in the abstraction λx.xyz, xyz is stored as one Variable("xyz").
+As visualized above, the function first makes sure that the input is a dictionary. In the substitution itself, for each character in the variable, the dictionary is searched. If the character is a key in the dictionary, the replace function is called, which itself has a time complexity of O(m) = m, with m being the number of characters in the string, as it loops through the string. This whole substitution method has a total time complexity O(n,m) = n * (m ** 2) , n being the number of key-value pairs in the dictionary and m the number of characters in the variable. Usually, a variable ony has one character, but as discussed in the manual below, certain expressions will be recognized as one variable by the program. For example, in the abstraction λx.xyz, xyz is stored as one Variable("xyz").
 
 ### Function Abstractions
 In the Abstraction class, function abstractions, a core concept in λ-calculus, are represented. This class models functions as abstractions over variables, comprising a variable and a body, which is itself a λ-term. Implementing this class was challenging but vital, as it embodies the way functions are defined and manipulated in λ-calculus. The __init__, __repr__, and __str__ methods within this class collectively facilitate the creation and representation of these abstractions, allowing for the essential operations of λ-calculus to be executed. In the __init__ method, two attributes of the abstraction (self) are defined: the variable (self.variable) and the body (self.body). 
@@ -112,9 +112,38 @@ What follows is a reduction for nested expressions, in which only free variables
                     
                 return self.function.body
 ```
-The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if it is a variable in the body of an abstraction (e.g., if "a" is the body of λx.x) or if it is an argument in an application (e.g., if "a" is the argument of (λx.x) y). The while loop as shown above, halts when "a" is a variable, because then the innermost part of the expressions has been reached. The time complexity of substitution in this loop is O(n) = n, n being the number of characters of "a". How often such a substitution takes place, depends on the number of nested expressions and types of expressions. 
+The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if it is a variable in the body of an abstraction (e.g., if "a" is the body of λx.x) or if it is an argument in an application (e.g., if "a" is the argument of (λx.x) y). The while loop as shown above, halts when "a" is a variable, because then the innermost part of the expressions has been reached. The time complexity of substitution in this loop is O(n), n being the number of characters of "a". How often such a substitution takes place, depends on the number of nested expressions and types of expressions. 
 
 This complex structure begs the question if there is not a simpler method to substitute only free variables, unfortunately, we have not found one. The difficulty in this specific substitution is understanding how one can access all the different parts of an expression, as the "self" in this class only has two attributes: an argument and a function. It is tempting to think that it would be much easier to encorporate these rules of substituting free or bound variables in the variable class itself, but in the variable class it is impossible to know if the variable is bound or not, as the expression in which the variable occurs is not known in the variable class itself. It may be possible to write these rules in the abstraction class, which is then called upon in the reduction method. However, a consequence might be that substitution as a method independent of reduction might not function as well.
+
+The last bit of the reduction method is quite easy to read:
+```python
+#if function is application
+        elif isinstance(self.function, Application):
+            return Application(self.function.reduce(), self.argument)
+
+        #if function is variable
+        else:
+            return self.argument
+```
+if the function is an application, this application must first be reduced. If the function is neither an application nor an abstraction, it must be a variable. This means that a variable is applied on the argument, which has the argument itself as output.
+
+### LambdaTerm class
+The purpose of the LambdaTerm class is to make possible a conversion of a string to either a variable, abstraction or application. This method starts by replacing the "\", which is used as a replacement for the "λ", because it is more accesible on a keyboard. Then, if necessary, it removes parentheses:
+```python
+s = s.replace('\\', 'λ').strip()
+
+        #Remove parentheses or turn into application if written as (...) (...)
+        if s.startswith("(") and s.endswith(")"):
+            if ") (" in s:
+                x = s.index(") (")
+                return Application(LambdaTerm.fromstring(s[:x + 1]), LambdaTerm.fromstring(s[x + 1:]))
+            else:
+                s = s[1:-1]
+```
+As mentioned above, the replace function has time complexity O(n). The second if-statement shown above is a loop with O(n) as well. If the string is in the form "(...) (...)", it is converted into an application, with its function and argument converted into λ-terms recursively.
+
+
 ## Manual
 
 ### User Guide
