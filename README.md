@@ -96,11 +96,11 @@ abstraction2 = Abstraction(y, abstraction) # λy.λx.x
 
 xy = Variable("xy")
 abstraction3 = Abstraction(x, xy) # λx.xy
-abstraction4 = Abstraction(x, "xy") # λx.xy
+abstraction4 = Abstraction(x, "xy") # λx.xy ! This will not work correctly in substitute function !
 abstraction5 = Abstraction(y, abstraction4) # λy.λx.xy
 
 ```
-As shown above, if the body of an abstraction consists of multiple variables, we can write this as a string, "xy", or as one variable. They will be treated as single variables in the substitution and reduction functions, but as the Abstraction class only takes two arguments, the body must be one entity.
+As shown above, if the body of an abstraction consists of multiple variables, both a string of characters as well as a Variable consisting of multiple characters will give a correct output. However, the substitution and reduction functions will only work if the abstraction body is written as a variable, as the program will not recognize a string in an abstraction. 
 
 Create function applications by giving two arguments:
 ```python
