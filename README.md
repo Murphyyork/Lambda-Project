@@ -40,7 +40,7 @@ In each class, methods like substitute and reduce were implemented to facilitate
 
 ### Variables
 
-In the implementation of the Variable class, the focus was on representing variables in λ-calculus expressions. Each variable is identified by a unique symbol, encapsulated within the class. The __init__ method initializes a variable with its symbol, while the __repr__ and __str__ methods provide string representations for ease of understanding and debugging. The substitute method allows for the substitution of variables within expressions, a critical operation in λ-calculus. This representation is foundational for handling variables within the broader context of the λ-calculus interpreter.
+In the implementation of the Variable class, the focus was on representing variables in λ-calculus expressions. Each variable is identified by a unique symbol, encapsulated within the class. The __init__ method initializes a variable with its symbol, while the __repr__ and __str__ methods provide string representations for ease of understanding. The substitute method allows for the substitution of variables within expressions, a critical operation in λ-calculus. This representation is foundational for handling variables within the broader context of the λ-calculus interpreter.
 
 ### Function Abstractions
 
