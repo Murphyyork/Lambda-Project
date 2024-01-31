@@ -87,7 +87,7 @@ Create variables using the `Variable` class:
 x = Variable("x") # x
 y = Variable("y") # y
 ```
-The Variable class only takes a string as input; otherwise it will raise a ValueError. 
+The variable class only takes a string as input; otherwise it will raise a value error. 
 
 Create function abstractions by giving two arguments (first a variable, then any other expression):
 ```python
@@ -99,7 +99,7 @@ abstraction3 = Abstraction(x, xy) # λx.xy
 abstraction4 = Abstraction(y, abstraction3) # λy.λx.xy
 
 ```
-As shown above, if the body of an abstraction consists of multiple variables, this should be written as one variable consisting of multiple characters, as the Abstraction class only takes two arguments as input. Furthermore, if the second argument is not of the type Variable, Abstraction or Application, the program will raise a ValueError; the first argument can only be a Variable. 
+As shown above, if the body of an abstraction consists of multiple variables, this should be written as one variable consisting of multiple characters, as the abstraction class only takes two arguments as input. Furthermore, if the second argument is not of the type variable, abstraction or application, the program will raise a value error; the first argument can only be a variable. 
 
 Create function applications by giving two arguments:
 ```python
@@ -107,7 +107,7 @@ application = Application(abstraction, y)  # Applies (λx.x) to y, which results
 application2 = Application(abstraction4, z) # Applies (λy.λx.xy) to z, which results in the output (λy.λx.xy) z
 application3 = Application(abstraction4, x) # Applies (λy.λx.xy) to x, which results in the output (λy.λx.xy) x
 ```
-The first argument will be applied to the second argument, as applications in the λ-calculus are left associative. Again, this class only takes Applications, Abstractions and Variables as input.
+The first argument will be applied to the second argument, as applications in the λ-calculus are left associative. Again, this class only takes applications, abstractions and variables as input.
 
 Substitute variables within expressions:
 ```python
