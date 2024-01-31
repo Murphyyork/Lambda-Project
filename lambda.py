@@ -45,7 +45,7 @@ class Variable(LambdaTerm):
         return self.symbol
 
     def substitute(self, rules):
-        for var in str(self.symbol):
+        for var in self.symbol:
             if var in rules:
                 self.symbol = self.symbol.replace(var, rules.get(var))
         return Variable(self.symbol)
