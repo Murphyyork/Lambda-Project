@@ -70,7 +70,7 @@ The substitution in this class is rather straightforward, as these two parts wil
 def substitute(self, rules):
         return Abstraction(self.variable.substitute(rules), self.body.substitute(rules))
 ```
-The time complexity of abstraction substitution is dependent on the amount of variables in the abstraction; the self.variable will always be O(n,m) = n + n * m, but the self.body can be an expression with a lot of expressions nested in it. In the end, it matters how often the variable substitution takes place.
+The time complexity of abstraction substitution is dependent on the amount of variables in the abstraction; in the end, it only matters how often the variable substitution takes place.
 
 
 
