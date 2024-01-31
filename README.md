@@ -243,7 +243,7 @@ Turn a string into a λ-term using the fromString method:
 a = LambdaTerm.fromString(r'\a b. a b') # turns string into the λ-term λa.λb.ab
 b = LambdaTerm.fromstring(r"(\ a b. a b) (\x y. x y)") # (λa.λb.ab) λx.λy.xy
 ```
-With this function, we can type a λ-term as a string and turn it into a λ-term; either a variable, abstraction or application. There are, however, a few notes to the use of this function. First of all, the "λ" is signified with a "\", because the "λ" is not easily accesible on a keyboard, but as the "\" symbol has a function in python of escaping the next character, it is important to use an r-string or raw string, so the "\" symbol will be read as a character of the string. Second, it is important that we use a space between each expression or variable, or the output will not be correct.
+With this function, we can type a λ-term as a string and turn it into a λ-term; either a variable, abstraction or application. There are, however, a few notes to the use of this function. First of all, the "λ" is signified with a "\\", because the "λ" is not easily accesible on a keyboard, but as the "\" symbol has a function in python of escaping the next character, it is important to use an r-string or raw string, so the "\" symbol will be read as a character of the string. Second, it is important that we use a space between each expression or variable, or the output will not be correct.
 
 
 ## Challenges and Solutions
