@@ -114,36 +114,44 @@ class Application(LambdaTerm):
         return Application(self.function.substitute(rules), self.argument.substitute(rules))
 
     def reduce(self):
-        #capture-avoiding substitution
-        if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
-            self.function = self.function.substitute({f"{self.argument}" : "t"})
-            
         
-        #for nested expressions
-        if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
+        #If function is abstraction
+        if isinstance(self.function, Abstraction):
             
-            #loop to ensure only free variables are replaced
-            a = self.function.body
-            while isinstance(a, Variable) == False:
-                if isinstance(a, Abstraction):
-                    if f"{a.variable}" == f"{self.function.variable}":
-                        break
-                    else:
-                        if isinstance(a.body, Abstraction) or isinstance(a.body, Application):
-                            a = a.body
-                        else:
-                            a = a.substitute({f"{self.function.variable}" : f"{self.argument}"})
-                            break
-                if isinstance(a, Application):
-                    a.argument = a.argument.substitute({f"{self.function.variable}" : f"{self.argument}"})
-                    a = a.function
+            #capture-avoiding substitution
+            if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
+                self.function = self.function.substitute({f"{self.argument}" : "t"})
                 
-            return self.function.body
-        
-        #for simple expressions
+            if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
+                
+                #loop to ensure only free variables are replaced
+                a = self.function.body
+                while isinstance(a, Variable) == False:
+                    if isinstance(a, Abstraction):
+                        if f"{a.variable}" == f"{self.function.variable}":
+                            break
+                        else:
+                            if isinstance(a.body, Abstraction) or isinstance(a.body, Application):
+                                a = a.body
+                            else:
+                                a = a.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                                break
+                    if isinstance(a, Application):
+                        a.argument = a.argument.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                        a = a.function
+                    
+                return self.function.body
+
+        #If function is application
+        elif isinstance(self.function, Application):
+            self.function = self.function.substitute({f"{self.function.argument}" : f"{self.argument}"})
+            return self.function
+
+        #If function is variable
         else:
-            self.function = self.function.substitute({f"{self.function.variable}" : f"{self.argument}"})
-            return self.function.body
+            return self.argument
+       
+
 
 
 
