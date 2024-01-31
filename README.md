@@ -46,19 +46,18 @@ In the implementation of the Variable class, the focus was on representing varia
 The substitute method is a bit more complicated: 
 ```python
 def substitute(self, rules):
-        #Raise errors
         if isinstance(rules, dict) == False:
             raise ValueError ("Substitution argument must be dictionary in form {'a' : 'b'}")
-        for item in rules.keys():
-            if isinstance(item, str) == False:
-                raise ValueError ("Only strings allowed as keys in dictionary")
-                
-        #Substitute each character in variable        
+        
         for var in self.symbol:
-            if var in rules:
-                if isinstance(rules.get(var), str) == False:
+            for item in rules.keys():
+                if isinstance(item, str) == False:
+                    raise ValueError ("Only strings allowed as keys in dictionary")
+                if isinstance(rules[item], str) == False:
                     raise ValueError ("Only strings allowed as values in dictionary")
-                self.symbol = self.symbol.replace(var, rules.get(var))
+                if var == item:
+                    self.symbol = self.symbol.replace(var, rules[item])
+        
         return Variable(self.symbol)
 ```
 As visualized above, the function first makes sure that the input is correct; it requires a dictionary with both keys and values as strings. A for loop is used for this, which give this a time complexity of O(n) = n, n being the number of key-value pairs in the dictionary. In the substitution itself, for each character in the variable, the dictionary is searched. If the character is a key in the dictionary, the replace function is called, which itself has a time complexity of O(m) = m, with m being the number of characters in the string, as it loops through the string. This whole substitution method has a total time complexity O(n,m) = n + n * (m ** 2) , n being the number of key-value pairs in the dictionary and m the number of characters in the variable. Usually, a variable ony has one character, but as discussed in the manual below, certain expressions will be recognized as one variable by the program. For example, in the abstraction λx.xyz, xyz is stored as one Variable("xyz").
