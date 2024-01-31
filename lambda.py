@@ -51,12 +51,14 @@ class Variable(LambdaTerm):
         return self.symbol
 
     def substitute(self, rules):
+        #Raise errors
         if isinstance(rules, dict) == False:
             raise ValueError ("Substitution argument must be dictionary in form {'a' : 'b'}")
         for item in rules.keys():
             if isinstance(item, str) == False:
                 raise ValueError ("Only strings allowed as keys in dictionary")
                 
+        #Substitute each character in variable        
         for var in self.symbol:
             if var in rules:
                 if isinstance(rules.get(var), str) == False:
@@ -118,8 +120,10 @@ class Application(LambdaTerm):
             self.function = self.function.substitute({f"{self.argument}" : "t"})
             
         
-        #loop to ensure only free variables are replaced
+        #for nested expressions
         if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
+            
+            #loop to ensure only free variables are replaced
             a = self.function.body
             while "." in f"{a}":
                 if isinstance(a, Abstraction):
@@ -137,7 +141,7 @@ class Application(LambdaTerm):
                 
             return self.function.body
         
-        #beta-reduction  
+        #for simple expressions
         else:
             self.function = self.function.substitute({f"{self.function.variable}" : f"{self.argument}"})
             return self.function.body
