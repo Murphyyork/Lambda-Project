@@ -85,13 +85,34 @@ def substitute(self, rules):
 
 The reduction method is more complicated. The first part makes sure that the argument on which the functions is applied, does not occur in the function itself, as that can lead to different variables symbolized by the same character. This substitution is called capture-avoiding substitution:
 ```python
-#capture-avoiding substitution
         if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
             self.function = self.function.substitute({f"{self.argument}" : "t"})
 ```
 The program searches for the argument in the body of the function, which has a time complexity of O(n) = n, with n as the number of characters in the body of the function. Next, if this capture-avoiding substitution should take place, the time complexity of the substitution itself again is dependent on the amount of variables inside the function.
 
-What follows is a reduction for nested expressions, in which only free variables, variables that are not bound due to an abstraction, have to be substituted. 
+What follows is a reduction for nested expressions, in which only free variables, variables that are not bound due to an abstraction, have to be substituted. For example, in the expression λx.xy, variable x is bound, while variable y remains unbound. Reduction for nested expressions looks as follows:
+```python
+        if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
+            
+            #loop to ensure only free variables are replaced
+            a = self.function.body
+            while isinstance(a, Variable) == False:
+                if isinstance(a, Abstraction):
+                    if f"{a.variable}" == f"{self.function.variable}":
+                        break
+                    else:
+                        if isinstance(a.body, Abstraction) or isinstance(a.body, Application):
+                            a = a.body
+                        else:
+                            a = a.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                            break
+                if isinstance(a, Application):
+                    a.argument = a.argument.substitute({f"{self.function.variable}" : f"{self.argument}"})
+                    a = a.function
+                
+            return self.function.body
+```
+The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if 
 ## Manual
 
 ### User Guide
