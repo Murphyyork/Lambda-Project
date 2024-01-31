@@ -60,7 +60,8 @@ class Variable(LambdaTerm):
                     raise ValueError ("Only strings allowed as keys in dictionary")
                 if isinstance(rules[item], str) == False:
                     raise ValueError ("Only strings allowed as values in dictionary")
-                self.symbol = self.symbol.replace(var, rules.get(var))
+                if var == item:
+                    self.symbol = self.symbol.replace(var, rules[item])
         
         return Variable(self.symbol)
    
