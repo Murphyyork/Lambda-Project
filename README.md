@@ -118,7 +118,7 @@ This complex structure begs the question if there is not a simpler method to sub
 
 The last bit of the reduction method is quite easy to read:
 ```python
-#if function is application
+        #if function is application
         elif isinstance(self.function, Application):
             return Application(self.function.reduce(), self.argument)
 
@@ -131,7 +131,7 @@ if the function is an application, this application must first be reduced. If th
 ### LambdaTerm class
 The purpose of the LambdaTerm class is to make possible a conversion of a string to either a variable, abstraction or application. This method starts by replacing the "\", which is used as a replacement for the "λ", because it is more accesible on a keyboard. Then, if necessary, it removes parentheses:
 ```python
-s = s.replace('\\', 'λ').strip()
+        s = s.replace('\\', 'λ').strip()
 
         #Remove parentheses or turn into application if written as (...) (...)
         if s.startswith("(") and s.endswith(")"):
@@ -142,6 +142,29 @@ s = s.replace('\\', 'λ').strip()
                 s = s[1:-1]
 ```
 As mentioned above, the replace function has time complexity O(n). The second if-statement shown above is a loop with O(n) as well. If the string is in the form "(...) (...)", it is converted into an application, with its function and argument converted into λ-terms recursively.
+
+The next part deals with abstractions, applications and variables respectively:
+```python
+        #Abstraction
+        if s.startswith('λ'):
+            parts = s[1:].split('.', 1)
+            variables = parts[0].strip().split(' ')
+            body = LambdaTerm.fromstring(parts[1].strip())
+            for var in reversed(variables):
+                body = Abstraction(Variable(var), body)
+            return body
+            
+        #Application
+        elif s.startswith("("):
+            func = s[:-1]
+            arg = s[len(s) - 1]
+            return Application(LambdaTerm.fromstring(func.strip()), LambdaTerm.fromstring(arg.strip()))
+            
+        #Variable(s)
+        else:
+            s = s.replace(" ", "")
+            return Variable(s)
+```
 
 
 ## Manual
