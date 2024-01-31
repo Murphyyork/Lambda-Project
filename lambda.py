@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 class LambdaTerm(ABC):
     @staticmethod
     def fromstring(s):
+        if len(s) ==0:
+            raise ValueError ("No string is implemented")
+
         s = s.replace('\\', 'λ').strip()
 
         #Remove parentheses or turn into application if written as (...) (...)
@@ -37,7 +40,10 @@ class Variable(LambdaTerm):
     """Represents a variable."""
     def __init__(self, symbol):
         self.symbol = symbol
-        
+
+        if isinstance(self.symbol, str) == False:
+            raise ValueError ("Only string allowed as input")
+            
     def __repr__(self):
         return f"Variable('{self.symbol}')"
 
@@ -57,6 +63,11 @@ class Abstraction(LambdaTerm):
         self.variable = variable
         self.body = body
 
+        if isinstance(self.variable, Variable) == False:
+            raise ValueError ("Only Variable allowed as first argument")
+        if isinstance(self.body, Abstraction) == False and isinstance(self.body, Application) == False and isinstance(self.body, Variable) == False:
+            raise ValueError ("Only Variable, Abstraction or Application allowed as second argument")
+            
     def __repr__(self):
         return f"Abstraction({self.variable.__repr__()}, {self.body.__repr__()})"
 
@@ -79,6 +90,11 @@ class Application(LambdaTerm):
         self.function = function
         self.argument = argument
 
+        if isinstance(self.function, Abstraction) == False and isinstance(self.function, Application) == False and isinstance(self.function, Variable) == False:
+            raise ValueError ("Only Variable, Abstraction or Application allowed as first argument")
+        if isinstance(self.argument, Abstraction) == False and isinstance(self.argument, Application) == False and isinstance(self.argument, Variable) == False:
+            raise ValueError ("Only Variable, Abstraction or Application allowed as second argument")
+            
     def __repr__(self):
         return f"Application({self.function}, {self.argument})"
 
