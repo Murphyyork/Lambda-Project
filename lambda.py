@@ -53,11 +53,14 @@ class Variable(LambdaTerm):
     def substitute(self, rules):
         if isinstance(rules, dict) == False:
             raise ValueError ("Substitution argument must be dictionary in form {'a' : 'b'}")
-            
+        for item in rules.keys():
+            if isinstance(item, str) == False:
+                raise ValueError ("Only strings allowed as keys in dictionary")
+                
         for var in self.symbol:
             if var in rules:
                 if isinstance(rules.get(var), str) == False:
-                    raise ValueError ("Only strings allowed as values and keys in dictionary")
+                    raise ValueError ("Only strings allowed as values in dictionary")
                 self.symbol = self.symbol.replace(var, rules.get(var))
         return Variable(self.symbol)
    
