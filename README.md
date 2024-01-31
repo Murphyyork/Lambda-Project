@@ -76,6 +76,7 @@ class Application(LambdaTerm):
     # ... other methods ...
 ```
 
+
 ## Manual
 ### User Guide
 
@@ -110,6 +111,14 @@ application3 = Application(abstraction4, x) # Applies (λy.λx.xy) to x, which r
 ```
 The first argument will be applied to the second argument, as applications in the λ-calculus are left associative. Again, this class only takes applications, abstractions and variables as input.
 
+### Representation
+This function shows the classes of each part of an expression:
+```python
+representation = repr(abstraction) # Abstraction(Variable("x"), Variable("x"))
+representation2 = repr(a) # Abstraction(Variable("a"), Abstraction(Variable("b"), Variable("ab")))
+```
+In other words: the representation function shows how to build a certain λ-term. 
+
 ### Substitution
 Substitute variables within expressions:
 ```python
@@ -136,20 +145,12 @@ b = LambdaTerm.fromstring(r"(\ a b. a b) (\x y. x y)") # (λa.λb.ab) λx.λy.xy
 ```
 With this function, we can type a λ-term as a string and turn it into a λ-term; either a variable, abstraction or application. There are, however, a few notes to the use of this function. First of all, the "λ" is signified with a "\", because the "λ" is not easily accesible on a keyboard, but as the "\" symbol has a function in python of escaping the next character, it is important to use an r-string or raw string, so the "\" symbol will be read as a character of the string. Second, it is important that we use a space between each expression or variable, or the output will not be correct.
 
-### Representation
-This function shows the classes of each part of an expression:
-```python
-representation = repr(abstraction) # Abstraction(Variable("x"), Variable("x"))
-representation2 = repr(a) # Abstraction(Variable("a"), Abstraction(Variable("b"), Variable("ab")))
-```
-In other words: the representation function shows how to build a certain λ-term. It takes as input a variable, abstraction or application.
 
 ## Challenges and Solutions
 
 One of the most challenging aspects was understanding and implementing beta-reduction. In the `Application` class, the process required ensuring that function abstractions were correctly applied to their arguments and appropriately simplified. Furthermore, it required the substitution of free variables, while leaving bound variables untouched. This may have been the hardest part of the beta-reduction and, to look back on the code critically, does not have a clear and easily understandable structure, although it has worked perfectly in our trials. 
 
 The primary difficulty in the `fromstring` method was correctly parsing the string representations of lambda calculus expressions. These expressions can be complex, containing nested structures, and require accurate identification of variables, abstractions, and applications. The recursive nature of these expressions adds another layer of complexity, as it requires the parsing logic to work correctly at multiple levels of nesting. To overcome these challenges, we employed a recursive design that calls the `fromstring` method within itself to handle nested expressions. This method accurately maintains the hierarchical nature of lambda expressions. Smart string manipulation, such as replacing backslashes with lambda characters and using `split` to dissect the string, simplifies the parsing process. The use of reversal for variables during abstraction construction is a key innovation that respects the order of operations in lambda calculus, ensuring the correct assembly of the expression tree.
-
 
 
 ## Results
