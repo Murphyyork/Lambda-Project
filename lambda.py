@@ -124,7 +124,7 @@ class Application(LambdaTerm):
             
             #loop to ensure only free variables are replaced
             a = self.function.body
-            while "." in f"{a}":
+            while isinstance(a, Variable) == False:
                 if isinstance(a, Abstraction):
                     if f"{a.variable}" == f"{self.function.variable}":
                         break
