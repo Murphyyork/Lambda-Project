@@ -9,7 +9,7 @@ Lambda Calculus (λ-calculus) is an essential conceptual framework in computer s
 
 In mathematics, a formal system, such as λ-calculus, is a symbolic game that begins with axioms and involves extensive deduction and proof, forming a self-contained system with axioms, theorems, corollaries, and conjectures. Formal languages are the tools used to describe these systems, providing a structured way to express and manipulate their components.
 
-In short, the λ-calculus processes λ-terms. There are three types of λ-terms: variables, abstractions and applications. A variable speaks for itself: it is a character that can take any value. An abstraction can be thought of as a function: it is denoted as a "λ", followed by a variable, a dot, and a function. An example of this would be λx.x + 1, which has the same meaning as the common notation F(x) = x + 1. An application is a λ-term in which a value is given to some variable. It is denoted as (λx.x) y, in which x is given the value y. For example, the output of the application (λx.x + 1) 7 is 8, as 7 + 1 = 8.
+In short, the λ-calculus processes λ-terms. There are three types of λ-terms: variables, abstractions and applications. A variable speaks for itself: it is a character that can take any value. An abstraction can be thought of as a function: it is denoted as a "λ", followed by a variable, a dot, and a function. An example of this would be λx.x + 1, which has the same meaning as the common notation F(x) = x + 1. An application is a λ-term in which one value or expression is given to some other expression. It is denoted as (λx.x) y, in which x is given the "value" y. For example, the output of the application (λx.x + 1) 7 is 8, as 7 + 1 = 8.
 
 
 ## Background
