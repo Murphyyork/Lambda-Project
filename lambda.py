@@ -26,8 +26,9 @@ class LambdaTerm(ABC):
             
         #Application
         elif s.startswith("("):
-            func = s[:-1]
-            arg = s[len(s) - 1]
+            x = s.rindex(")")
+            func = s[:x + 1]
+            arg = s[x + 1:]
             return Application(LambdaTerm.fromstring(func.strip()), LambdaTerm.fromstring(arg.strip()))
             
         #Variable(s)
