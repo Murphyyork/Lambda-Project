@@ -154,7 +154,7 @@ First of all, arithmetical and logical operators have not been added, so exact m
 
 Furthermore, as previously mentioned, λ-terms in which capture-avoiding substitution must take place more than once, will not have a correct output. This is very easily fixed: one can simply add more lines in which symbols are replaced not with "t", but with other symbols. There will, of course, always be some limit to the amount of capture-avoiding substitution one can do.
 
-In future developments of the λ-calculus interpreter, I aim to integrate a type system. This addition is expected to not only enhance the robustness of the interpreter but also contribute significantly to the field of programming language design. Incorporating a type system will allow the interpreter to handle a wider range of computational concepts and offer more precise error handling and validation capabilities. This enhancement aligns with advancing the interpreter towards a more sophisticated tool for exploring and experimenting with functional programming paradigms.
+In future developments of the λ-calculus interpreter, we will aim to integrate a type system. This addition is expected to not only enhance the robustness of the interpreter but also contribute significantly to the field of programming language design. Incorporating a type system will allow the interpreter to handle a wider range of computational concepts and offer more precise error handling and validation capabilities. This enhancement aligns with advancing the interpreter towards a more sophisticated tool for exploring and experimenting with functional programming paradigms.
 
 
 ## References
