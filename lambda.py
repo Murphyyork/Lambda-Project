@@ -51,6 +51,9 @@ class Variable(LambdaTerm):
         return self.symbol
 
     def substitute(self, rules):
+        if isinstance(rules, dict) == False:
+            raise ValueError ("Substitution argument must be dictionary in form {'a' : 'b'}")
+            
         for var in self.symbol:
             if var in rules:
                 self.symbol = self.symbol.replace(var, rules.get(var))
