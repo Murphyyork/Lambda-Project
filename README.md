@@ -70,7 +70,7 @@ The substitution in this class is rather straightforward, as these two parts wil
 def substitute(self, rules):
         return Abstraction(self.variable.substitute(rules), self.body.substitute(rules))
 ```
-The time complexity of abstraction substitution is dependent on the amount of variables in the abstraction; in the end, it only matters how often the variable substitution takes place.
+The time complexity of abstraction substitution is dependent on the number of variables in the abstraction; in the end, it only matters how often the variable substitution takes place.
 
 
 
@@ -88,9 +88,9 @@ The reduction method is more complicated, let us especially pay close attention 
         if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
             self.function = self.function.substitute({f"{self.argument}" : "t"})
 ```
-The program searches for the argument in the body of the function, which has a time complexity of O(n) = n, with n as the number of characters in the body of the function. Next, if this capture-avoiding substitution should take place, the time complexity of the substitution itself again is dependent on the amount of variables inside the function.
+The program searches for the argument in the body of the function, which has a time complexity of O(n) = n, with n as the number of characters in the body of the function. Next, if this capture-avoiding substitution should take place, the time complexity of the substitution itself again is dependent on the number of variables inside the function.
 
-What follows is a reduction for nested expressions, in which only free variables, variables that are not bound due to an abstraction, have to be substituted. For example, in the expression λx.xy, variable x is bound, while variable y remains unbound. Reduction for nested expressions looks as follows:
+What follows is a reduction for nested expressions, in which only free variables, variables that are not bound due to an abstraction, must be substituted. For example, in the expression λx.xy, variable x is bound, while variable y remains unbound. Reduction for nested expressions looks as follows:
 ```python
         if isinstance(self.function.body, Abstraction) or isinstance(self.function.body, Application):
                 
@@ -114,7 +114,7 @@ What follows is a reduction for nested expressions, in which only free variables
 ```
 The character "a" is taken as a name that changes into more and more specific parts of the nested expression. It is subject to substitution if it is a variable in the body of an abstraction (e.g., if "a" is the body of λx.x) or if it is an argument in an application (e.g., if "a" is the argument of (λx.x) y). The while loop as shown above, halts when "a" is a variable, because then the innermost part of the expressions has been reached. The time complexity of substitution in this loop is O(n), n being the number of characters of "a". How often such a substitution takes place, depends on the number of nested expressions and types of expressions. 
 
-This complex structure begs the question if there is not a simpler method to substitute only free variables, unfortunately, we have not found one. The difficulty in this specific substitution is understanding how one can access all the different parts of an expression, as the "self" in this class only has two attributes: an argument and a function. It is tempting to think that it would be much easier to encorporate these rules of substituting free or bound variables in the variable class itself, but in the variable class it is impossible to know if the variable is bound or not, as the expression in which the variable occurs is not known in the variable class itself. It may be possible to write these rules in the abstraction class, which is then called upon in the reduction method. However, a consequence might be that substitution as a method independent of reduction might not function as well.
+This complex structure begs the question if there is not a simpler method to substitute only free variables, unfortunately, we have not found one. The difficulty in this specific substitution is understanding how one can access all the different parts of an expression, as the "self" in this class only has two attributes: an argument and a function. It is tempting to think that it would be much easier to incorporate these rules of substituting free or bound variables in the variable class itself, but in the variable class it is impossible to know if the variable is bound or not, as the expression in which the variable occurs is not known in the variable class itself. It may be possible to write these rules in the abstraction class, which is then called upon in the reduction method. However, a consequence might be that substitution as a method independent of reduction might not function as well.
 
 The last bit of the reduction method is quite easy to read:
 ```python
@@ -129,7 +129,7 @@ The last bit of the reduction method is quite easy to read:
 if the function is an application, this application must first be reduced. If the function is neither an application nor an abstraction, it must be a variable. This means that a variable is applied on the argument, which has the argument itself as output.
 
 ### LambdaTerm class
-The purpose of the LambdaTerm class is to make possible a conversion of a string to either a variable, abstraction or application. This method starts by replacing the "\", which is used as a replacement for the "λ", because it is more accesible on a keyboard. Then, if necessary, it removes parentheses:
+The purpose of the LambdaTerm class is to make possible a conversion of a string to either a variable, abstraction or application. This method starts by replacing the "\", which is used as a replacement for the "λ", because it is more accessible on a keyboard. Then, if necessary, it removes parentheses:
 ```python
         s = s.replace('\\', 'λ').strip()
 
@@ -170,7 +170,7 @@ In the abstraction part, variables are listed in "variables". The last two varia
 
 For applications, the ")" needs to be found in the string to cut the string on the right spot. This rindex function costs O(n) as well. 
 
-Finally, the variables are very easy. As previously mentioned, a body of an abstraction with multiple variables is stored as one variable, therefore the white space need to be removed before converting the string into a variable.
+Finally, the variables are very easy. As previously mentioned, a body of an abstraction with multiple variables is stored as one variable, therefore the white spaces need to be removed before converting the string into a variable.
 
 ### Overall structure and time complexity
 All in all, the structure is quite clearly outlined, with three classes which work together through methods like substitution and reduction, and a fourth class which allows string conversion to λ-terms. The structure of the reduction method may seem messy, but this seemed to us the only way without changing substitution as an independent method.
@@ -200,7 +200,7 @@ xy = Variable("xy")
 abstraction3 = Abstraction(x, xy) # λx.xy
 abstraction4 = Abstraction(y, abstraction3) # λy.λx.xy
 ```
-As shown above, if the body of an abstraction consists of multiple variables, this should be written as one variable consisting of multiple characters, as the abstraction class only takes two arguments as input. Furthermore, if the second argument is not of the type variable, abstraction or application, the program will raise a value error; the first argument can only be a variable. 
+As shown above, if the body of an abstraction consists of multiple variables, this should be written as one variable consisting of multiple characters, as the abstraction class only takes two arguments as input. Furthermore, if the second argument is not of the type of variable, abstraction or application, the program will raise a value error; the first argument can only be a variable. 
 
 ### Creating Applications
 Create function applications by giving two arguments:
@@ -235,7 +235,7 @@ reduced2 = application2.reduce() # reduces "(λy.λx.xy) z", which results in ou
 reduced3 = application2.reduce # reduces (λy.λx.xy) x, which results in output λt.tx
 ```
 β-reductions reduce the application expression by substituting, in the body of the function, the argument (in the first example "y", in the second example "z") with the variable of the function ("λx" and "λy" respectively), which results in function body's with substituted variables ("y" and "λx.xz").
-When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must takes measures as to not mix up these two different variables. Therefore, we first substitute the bound "x" with another symbol, which will be "t". The output that follows, is "λt.tx". These substitutions are often referred to as capture-avoiding substitutions. Note that in such cases, if a bound variable needs to be substituted before the reduction, the program will always substitute the present variable with a "t". This means that λ-terms, in which there is already a variable "t" present or in which such a substitute must take place more than once, will not have a correct reduction outcome. However, it is quite rare that such a substitution should happen more than once in the same expression. If the user avoids using "t" as a variable in the λ-terms, the program will work in most cases.
+When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must take measures as to not mix up these two different variables. Therefore, we first substitute the bound "x" with another symbol, which will be "t". The output that follows, is "λt.tx". These substitutions are often referred to as capture-avoiding substitutions. Note that in such cases, if a bound variable needs to be substituted before the reduction, the program will always substitute the present variable with a "t". This means that λ-terms, in which there is already a variable "t" present or in which such a substitute must take place more than once, will not have a correct reduction outcome. However, it is quite rare that such a substitution should happen more than once in the same expression. If the user avoids using "t" as a variable in the λ-terms, the program will work in most cases.
 
 ### fromString
 Turn a string into a λ-term using the fromString method:
@@ -243,7 +243,7 @@ Turn a string into a λ-term using the fromString method:
 a = LambdaTerm.fromString(r'\a b. a b') # turns string into the λ-term λa.λb.ab
 b = LambdaTerm.fromstring(r"(\ a b. a b) (\x y. x y)") # (λa.λb.ab) λx.λy.xy
 ```
-With this function, we can type a λ-term as a string and turn it into a λ-term; either a variable, abstraction or application. There are, however, a few notes to the use of this function. First of all, the "λ" is signified with a "\\", because the "λ" is not easily accesible on a keyboard, but as the "\" symbol has a function in python of escaping the next character, it is important to use an r-string or raw string, so the "\" symbol will be read as a character of the string. Second, it is important that we use a space between each expression or variable, or the output will not be correct.
+With this function, we can type a λ-term as a string and turn it into a λ-term; either a variable, abstraction or application. There are, however, a few notes to the use of this function. First, the "λ" is signified with a "\\", because the "λ" is not easily accessible on a keyboard, but as the "\" symbol has a function in python of escaping the next character, it is important to use an r-string or raw string, so the "\" symbol will be read as a character of the string. Second, it is important that we use a space between each expression or variable, or the output will not be correct.
 
 
 ## Challenges and Solutions
@@ -255,14 +255,14 @@ The primary difficulty in the `fromstring` method was correctly parsing the stri
 
 ## Results
 
-In this project, we have achieved to write a basis for the λ-calculus, and therefore have layed a foundation for an abstract formal system. Three classes have been succesfully implemented (Variable, Abstraction and Application) and with it, the most important functions have been computed, namely the substitution and beta-reduction. In addition, a fromString method has been added. In almost all trials, these functions have worked flawlessly, for very simple expressions as well as more advanced, nested expressions. Only the most complicated expressions, for example expressions consisting of more than five nested expressions, may not work flawlessly in our program.
+In this project, we have achieved to write a basis for the λ-calculus, and therefore have established a basis for an abstract formal system. Three classes have been successfully implemented (Variable, Abstraction and Application) and with it, the most important functions have been computed, namely the substitution and beta-reduction. In addition, a fromString method has been added. In almost all trials, these functions have worked flawlessly, for very simple expressions as well as more advanced, nested expressions. Only the most complicated expressions, for example expressions consisting of more than five nested expressions, may not work flawlessly in our program.
 
 
 ## Conclusion and discussion
 
 In conclusion, with three basic classes and functions for substitution and reduction of expressions, we have computed the basis for a λ-calculus; a formal system that can take abstract expressions as input and convert them into or apply them on other expressions. However, our program does have some limitations.
 
-First of all, arithmetical and logical operators have not been added, so exact mathematics cannot yet be expressed in this λ-calculus. This would make a good next addition to the program; how such arithmetical and logical operators can be expressed in λ-terms, is described clearly in ["A Tutotrial Introduction to the Lambda Calculus"] by R. Rojas. 
+First, arithmetical and logical operators have not been added, so exact mathematics cannot yet be expressed in this λ-calculus. This would make a good next addition to the program; how such arithmetical and logical operators can be expressed in λ-terms, is described clearly in ["A Tutorial Introduction to the Lambda Calculus"] by R. Rojas. 
 
 Furthermore, as previously mentioned, λ-terms in which capture-avoiding substitution must take place more than once, will not have a correct output. This is very easily fixed: one can simply add more lines in which symbols are replaced not with "t", but with other symbols. There will, of course, always be some limit to the amount of capture-avoiding substitution one can do.
 
@@ -271,13 +271,13 @@ In future developments of the λ-calculus interpreter, we will also aim to integ
 
 ## Ending note
 
-The tasks in this project have been equally distributed. Futao Yan started the base of the code, writing the __init__, __str__ and __repr__ methods. In addition he has written a great deal of the 'fromstring' method. Kristian has written most of the reduction and substitution methods. However, both of us have revised and adjusted each others work. To the report as well, we have both contributed equally, although we have not had a clearly outlined task distribution. Futao Yan started writing the report with the introduction, a bit of the background, results and a conclusion and discussion. Furthermore, he made a start with the manual and algorithm explanation. Kristian then adjusted some parts of the background chapter, wrote parts of the algorithm explanation and the manual, and complemented the challenges and solutions and conclusion. All in all, both of us have been equally involved in this project, trying to perfect this basis for a λ-calculus as well as the report itself. It has been a learning experience for the both of us, which has taught us even more how to encode in python and has deepened our understanding of the basis of computer science. 
+The tasks in this project have been equally distributed. Futao Yan started the base of the code, writing the __init__, __str__ and __repr__ methods. In addition he has written a great deal of the 'fromstring' method. Kristian has written most of the reduction and substitution methods. However, both of us have revised and adjusted each other's work. To the report as well, we have both contributed equally, although we have not had a clearly outlined task distribution. Futao Yan started writing the report with the introduction, a bit of the background, results and a conclusion and discussion. Furthermore, he made a start with the manual and algorithm explanation. Kristian then adjusted some parts of the background chapter, wrote parts of the algorithm explanation and the manual, and complemented the challenges and solutions and conclusion. All in all, both of us have been equally involved in this project, trying to perfect this basis for a λ-calculus as well as the report itself. It has been a learning experience for the both of us, which has taught us even more how to encode in python and has deepened our understanding of the basis of computer science. 
 
 
 ## References
 
 - For an in-depth understanding of Lambda Calculus and its application in functional programming, refer to ["Lambda Calculus and Functional Programming"](https://lushunjian.gitee.io/2020/04/12/lyan-suan-yu-han-shu-shi-bian-cheng/), which provides comprehensive insights into the basics of λ-calculus.
 - For beginners, a helpful guide to understanding λ-calculus can be found at ["Lambda Calculus for Absolute Dummies"](https://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html).
-- For a basic understanding of substitution, reduction, arithmetic and logical operators in the Lambda Calculus, refer to ["A Tutotrial Introduction to the Lambda Calculus"], R. Rojas, Freie Universität Berlin 2015, (https://arxiv.org/pdf/1503.09060.pdf).
+- For a basic understanding of substitution, reduction, arithmetic and logical operators in the Lambda Calculus, refer to ["A Tutorial Introduction to the Lambda Calculus"], R. Rojas, Freie Universität Berlin 2015, (https://arxiv.org/pdf/1503.09060.pdf).
 - For a history of the Decision Problem and its relation to the λ-calculus, refer to ["The theory of the foundations of mathematics - 1870 to 1940-"], M. Scheffer, Eindhoven University of Technology 2002, https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=78ffac7cd5efaee3f8967e7f30473a8983dc1a93. 
   
