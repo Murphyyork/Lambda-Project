@@ -269,6 +269,11 @@ Furthermore, as previously mentioned, λ-terms in which capture-avoiding substit
 In future developments of the λ-calculus interpreter, we will aim to integrate a type system. This addition is expected to not only enhance the robustness of the interpreter but also contribute significantly to the field of programming language design. Incorporating a type system will allow the interpreter to handle a wider range of computational concepts and offer more precise error handling and validation capabilities. This enhancement aligns with advancing the interpreter towards a more sophisticated tool for exploring and experimenting with functional programming paradigms.
 
 
+## Ending note
+
+The tasks in this project have been equally distributed. Futao Yan started the base of the code, writing the __init__, __str__ and __repr__ methods. In addition he has written a great deal of the 'fromstring' method. Kristian has written most of the reduction and substitution methods. However, both of us have revised and adjusted each others work. To the report as well, we have both contributed equally, although we have not had a clearly outlined task distribution. Futao Yan started writing the report with the introduction, a bit of the background, results and a conclusion and discussion. Furthermore, he made a start with the manual and algorithm explanation. Kristian then adjusted some parts of the background chapter, wrote parts of the algorithm explanation and the manual, and complemented the challenges and solutions and conclusion. All in all, both of us have been equally involved in this project, trying to perfect this basis for a λ-calculus as well as the report itself. It has been a learning experience for the both of us, which has taught us even more how to encode in python and has deepened our understanding of the basis of computer science. 
+
+
 ## References
 
 - For an in-depth understanding of Lambda Calculus and its application in functional programming, refer to ["Lambda Calculus and Functional Programming"](https://lushunjian.gitee.io/2020/04/12/lyan-suan-yu-han-shu-shi-bian-cheng/), which provides comprehensive insights into the basics of λ-calculus.
