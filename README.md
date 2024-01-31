@@ -87,7 +87,7 @@ Create variables using the `Variable` class:
 x = Variable("x") # x
 y = Variable("y") # y
 ```
-
+The Variable class only takes a string as input; otherwise it will raise a ValueError. 
 
 Create function abstractions by giving two arguments (first a variable, then any other expression):
 ```python
@@ -96,19 +96,18 @@ abstraction2 = Abstraction(y, abstraction) # λy.λx.x
 
 xy = Variable("xy")
 abstraction3 = Abstraction(x, xy) # λx.xy
-abstraction4 = Abstraction(x, "xy") # λx.xy ! This will not work correctly in the substitute function !
-abstraction5 = Abstraction(y, abstraction4) # λy.λx.xy
+abstraction4 = Abstraction(y, abstraction3) # λy.λx.xy
 
 ```
-As shown above, if the body of an abstraction consists of multiple variables, both a string of characters as well as a Variable consisting of multiple characters will give a correct output. However, the substitution and reduction functions will only work if the abstraction body is written as a variable, as the program will not recognize a string in an abstraction. 
+As shown above, if the body of an abstraction consists of multiple variables, this should be written as one variable consisting of multiple characters, as the Abstraction class only takes two arguments as input. Furthermore, if the second argument is not of the type Variable, Abstraction or Application, the program will raise a ValueError; the first argument can only be a Variable. 
 
 Create function applications by giving two arguments:
 ```python
 application = Application(abstraction, y)  # Applies (λx.x) to y, which results in the output (λx.x) y
-application2 = Application(abstraction5, z) # Applies (λy.λx.xy) to z, which results in the output (λy.λx.xy) z
-application3 = Application(abstraction5, x) # Applies (λy.λx.xy) to x, which results in the output (λy.λx.xy) x
+application2 = Application(abstraction4, z) # Applies (λy.λx.xy) to z, which results in the output (λy.λx.xy) z
+application3 = Application(abstraction4, x) # Applies (λy.λx.xy) to x, which results in the output (λy.λx.xy) x
 ```
-The first argument will be applied to the second argument, as applications in the λ-calculus are left associative.
+The first argument will be applied to the second argument, as applications in the λ-calculus are left associative. Again, this class only takes Applications, Abstractions and Variables as input.
 
 Substitute variables within expressions:
 ```python
