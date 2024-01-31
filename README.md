@@ -28,7 +28,7 @@ Writing a λ-calculus program might at first sight seem like a fairly simple tas
 
 ### Design
 
-In the implementation of the λ-calculus interpreter, the algorithm design employs object-oriented principles, defining distinct classes for each λ-calculus construct: Variable, Abstraction, and Application. Each class encapsulates specific behaviors and properties of these constructs. The Variable class, for instance, represents variables with unique symbols. Abstraction handles λ-function abstractions, combining a variable with a body expression, while Application manages the application of one λ-term to another. Central to the design is the implementation of substitution methods and β-reduction logic, allowing for the evaluation and simplification of λ-calculus expressions in a manner true to the theoretical foundation of λ-calculus.
+In the implementation of the λ-calculus interpreter, the algorithm design employs object-oriented principles, defining distinct classes for each λ-calculus construct: Variable, Abstraction, and Application. Each class encapsulates specific behaviors and properties of these constructs. Furthermore, there is a fourth class, named LambdaTerm, which is subject only to the fromString method, in which a string is converted into a variable, abstraction or application. 
 
 ### Coding Process
 The coding process for your λ-calculus interpreter involved implementing three key classes: Variable, Abstraction, and Application. Each class represents a fundamental aspect of λ-calculus:
@@ -38,15 +38,45 @@ Variable: Handles the representation of variables, identified by symbols.
 Abstraction: Manages function abstractions, defined as a pair of a variable and a body expression.
 
 Application: Deals with the application of one λ-term to another.
-In each class, methods like substitute and reduce were implemented to facilitate the core operations of λ-calculus, such as substitution and β-reduction. This approach ensures your interpreter can process λ-calculus expressions, reflecting both the structural and operational aspects of λ-calculus theory.
+
+In each class, methods like substitute and reduce were implemented to facilitate the core operations of λ-calculus, such as substitution and β-reduction. This approach ensures the interpreter can process λ-calculus expressions, reflecting both the structural and operational aspects of λ-calculus theory.
 
 ### Variables
 
-In the implementation of the Variable class, the focus was on representing variables in λ-calculus expressions. Each variable is identified by a unique symbol, encapsulated within the class. The __init__ method initializes a variable with its symbol, while the __repr__ and __str__ methods provide string representations for ease of understanding. The substitute method allows for the substitution of variables within expressions, a critical operation in λ-calculus. This representation is foundational for handling variables within the broader context of the λ-calculus interpreter.
+In the implementation of the Variable class, the focus was on representing variables in λ-calculus expressions. Each variable is identified by a unique symbol, encapsulated within the class. The __init__ method initializes a variable with its symbol, while the __repr__ and __str__ methods provide string representations for ease of understanding. These functions are easy to read and have a time complexity of O(n) = 1. 
+
+The substitute method is a bit more complicated: 
+```python
+def substitute(self, rules):
+        #Raise errors
+        if isinstance(rules, dict) == False:
+            raise ValueError ("Substitution argument must be dictionary in form {'a' : 'b'}")
+        for item in rules.keys():
+            if isinstance(item, str) == False:
+                raise ValueError ("Only strings allowed as keys in dictionary")
+                
+        #Substitute each character in variable        
+        for var in self.symbol:
+            if var in rules:
+                if isinstance(rules.get(var), str) == False:
+                    raise ValueError ("Only strings allowed as values in dictionary")
+                self.symbol = self.symbol.replace(var, rules.get(var))
+        return Variable(self.symbol)
+```
+As visualized above, the function first makes sure that the input is correct; it requires a dictionary with both keys and values as strings. A for loop is used for this, which give this a time complexity of O(n) = n, n being the number of key-value pairs in the dictionary. In the substitution itself, for each character in the variable, the dictionary is searched. If the character is a key in the dictionary, substitution takes place. This process has time complexity O(n,m) = n * m, n being the number of key-value pairs in the dictionary and m the number of characters in the variable. Usually, a variable ony has one character, but as discussed in the manual below, certain expressions will be recognized as one variable by the program. For example, in the abstraction λx.xyz, xyz is stored as one Variable("xyz").
 
 ### Function Abstractions
 
-In the Abstraction class, function abstractions, a core concept in λ-calculus, are represented. This class models functions as abstractions over variables, comprising a variable and a body, which is itself a λ-term. Implementing this class was challenging but vital, as it embodies the way functions are defined and manipulated in λ-calculus. The __init__, __repr__, __str__, and substitute methods within this class collectively facilitate the creation and representation of these abstractions, allowing for the essential operations of λ-calculus to be executed.
+In the Abstraction class, function abstractions, a core concept in λ-calculus, are represented. This class models functions as abstractions over variables, comprising a variable and a body, which is itself a λ-term. Implementing this class was challenging but vital, as it embodies the way functions are defined and manipulated in λ-calculus. The __init__, __repr__, and __str__ methods within this class collectively facilitate the creation and representation of these abstractions, allowing for the essential operations of λ-calculus to be executed. In the __init__ method, two attributes of the abstraction (self) are defined: the variable (self.variable) and the body (self.body). 
+
+The substitution in this class is rather straightforward, as these two parts will be put into the substitution method individually, which in the end leads back to the substitution in the variable class:
+```python
+def substitute(self, rules):
+        return Abstraction(self.variable.substitute(rules), self.body.substitute(rules))
+```
+The time complexity of abstraction substitution is dependent on the amount of variables in the abstraction; the self.variable will always be O(n,m) = n + n * m, but the self.body can be an expression with a lot of expressions nested in it. In the end, it matters how often the variable substitution takes place.
+
+
 
 ### Function Applications
 
