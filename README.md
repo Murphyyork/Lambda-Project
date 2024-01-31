@@ -156,8 +156,9 @@ The next part deals with abstractions, applications and variables respectively:
             
         #Application
         elif s.startswith("("):
-            func = s[:-1]
-            arg = s[len(s) - 1]
+            x = s.rindex(")")
+            func = s[:x + 1]
+            arg = s[x + 1:]
             return Application(LambdaTerm.fromstring(func.strip()), LambdaTerm.fromstring(arg.strip()))
             
         #Variable(s)
@@ -165,7 +166,16 @@ The next part deals with abstractions, applications and variables respectively:
             s = s.replace(" ", "")
             return Variable(s)
 ```
+In the abstraction part, variables are listed in "variables". The last two variables of the list form an abstraction, with which the variable prior forms an abstraction iteratively. This for loop has time complexity O(n), n being the number of variables in the list.
 
+For applications, the ")" needs to be found in the string to cut the string on the right spot. This rindex function costs O(n) as well. 
+
+Finally, the variables are very easy. As previously mentioned, a body of an abstraction with multiple variables is stored as one variable, therefore the white space need to be removed before converting the string into a variable.
+
+### Overall structure and time complexity
+All in all, the structure is quite clearly outlined, with three classes which work together through methods like substitution and reduction. The structure of the reduction method may seem messy, but this seemed to us the only way without changing substitution as an independent method.
+
+As for the time complexity, a lot of loops, which compute as O(n), are used, because a string or expression must often be searched for a certain character when substituting an expression or defining the type of λ-term for a string. The substitution of a variable depends on the number of characters of the variable (m) and the number of key-value pairs in the dictionary (n), in the relation of O(n,m) = n * (m ** 2). In the reduction method, it is always the case that n = 1 (as you only apply one argument). However, in nested expressions, for each part of the application, the λ-calculus checks what type it is, let us call the amount of parts "p" and the amount of variables of these parts "v". Then, the total time complexity of the reduction of nested expressions is O(m,p,v) = p + v * (m ** 2).
 
 ## Manual
 
