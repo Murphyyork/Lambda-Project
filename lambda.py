@@ -114,7 +114,10 @@ class Application(LambdaTerm):
         return Application(self.function.substitute(rules), self.argument.substitute(rules))
 
     def reduce(self):
-        
+        #If argument is application, first simplify
+        if isinstance(self.argument, Application):
+            self.argument = self.argument.reduce()
+
         #If function is abstraction
         if isinstance(self.function, Abstraction):
             
@@ -141,11 +144,13 @@ class Application(LambdaTerm):
                         a = a.function
                     
                 return self.function.body
-
+            else:
+                self.function.body = self.function.body.substitute({f"{self.function.variable}" : f"{self.argument}"})    
+                return Variable(f"{self.function.body}")
+                
         #If function is application
         elif isinstance(self.function, Application):
-            self.function = self.function.substitute({f"{self.function.argument}" : f"{self.argument}"})
-            return self.function
+            return Application(self.function.reduce(), self.argument)
 
         #If function is variable
         else:
