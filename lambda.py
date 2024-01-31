@@ -56,6 +56,8 @@ class Variable(LambdaTerm):
             
         for var in self.symbol:
             if var in rules:
+                if isinstance(rules.get(var), str) == False:
+                    raise ValueError ("Only strings allowed as values and keys in dictionary")
                 self.symbol = self.symbol.replace(var, rules.get(var))
         return Variable(self.symbol)
    
