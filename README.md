@@ -89,6 +89,7 @@ y = Variable("y") # y
 ```
 The variable class only takes a string as input; otherwise it will raise a value error. 
 
+### Creating Abstractions
 Create function abstractions by giving two arguments (first a variable, then any other expression):
 ```python
 abstraction = Abstraction(x, x)  # λx.x
@@ -97,10 +98,10 @@ abstraction2 = Abstraction(y, abstraction) # λy.λx.x
 xy = Variable("xy")
 abstraction3 = Abstraction(x, xy) # λx.xy
 abstraction4 = Abstraction(y, abstraction3) # λy.λx.xy
-
 ```
 As shown above, if the body of an abstraction consists of multiple variables, this should be written as one variable consisting of multiple characters, as the abstraction class only takes two arguments as input. Furthermore, if the second argument is not of the type variable, abstraction or application, the program will raise a value error; the first argument can only be a variable. 
 
+### Creating Applications
 Create function applications by giving two arguments:
 ```python
 application = Application(abstraction, y)  # Applies (λx.x) to y, which results in the output (λx.x) y
@@ -109,12 +110,15 @@ application3 = Application(abstraction4, x) # Applies (λy.λx.xy) to x, which r
 ```
 The first argument will be applied to the second argument, as applications in the λ-calculus are left associative. Again, this class only takes applications, abstractions and variables as input.
 
+### Substitution
 Substitute variables within expressions:
 ```python
 substitution = x.substitute({"x": "y"}) # output is y
 substitution2 = abstraction.substitute({"x" : "y"}) # output is λy.y
 ```
 The substitution input must be written as a dictionary
+
+### Reduction
 Execute β-reductions with the reduce method:
 ```python
 reduced = application.reduce() # reduces "(λx.x) y", which results in output "y"
@@ -124,6 +128,7 @@ reduced3 = application2.reduce # reduces (λy.λx.xy) x, which results in output
 β-reductions reduce the application expression by substituting, in the body of the function, the argument (in the first example "y", in the second example "z") with the variable of the function ("λx" and "λy" respectively), which results in function body's with substituted variables ("y" and "λx.xz").
 When we take a look at the third reduction, we can see that "y" is substituted with "x". However, as "x" is already present as a bound variable, we must takes measures as to not mix up these two different variables. Therefore, we first substitute the bound "x" with another symbol, which will be "t". The output that follows, is "λt.tx". These substitutions are often referred to as capture-avoiding substitutions. Note that in such cases, if a bound variable needs to be substituted before the reduction, the program will always substitute the present variable with a "t". This means that λ-terms, in which there is already a variable "t" present or in which such a substitute must take place more than once, will not have a correct reduction outcome. However, it is quite rare that such a substitution should happen more than once in the same expression. If the user avoids using "t" as a variable in the λ-terms, the program will work in most cases.
 
+### fromString
 Turn a string into a λ-term using the fromString method:
 ```python
 a = LambdaTerm.fromString(r'\a b. a b') # turns string into the λ-term λa.λb.ab
@@ -131,6 +136,13 @@ b = LambdaTerm.fromstring(r"(\ a b. a b) (\x y. x y)") # (λa.λb.ab) λx.λy.xy
 ```
 With this function, we can type a λ-term as a string and turn it into a λ-term; either a variable, abstraction or application. There are, however, a few notes to the use of this function. First of all, the "λ" is signified with a "\", because the "λ" is not easily accesible on a keyboard, but as the "\" symbol has a function in python of escaping the next character, it is important to use an r-string or raw string, so the "\" symbol will be read as a character of the string. Second, it is important that we use a space between each expression or variable, or the output will not be correct.
 
+### Representation
+This function shows the classes of each part of an expression:
+```python
+representation = repr(abstraction) # Abstraction(Variable("x"), Variable("x"))
+representation2 = repr(a) # Abstraction(Variable("a"), Abstraction(Variable("b"), Variable("ab")))
+```
+In other words: the representation function shows how to build a certain λ-term. It takes as input a variable, abstraction or application.
 
 ## Challenges and Solutions
 
