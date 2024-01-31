@@ -89,7 +89,7 @@ class Application(LambdaTerm):
         return Application(self.function.substitute(rules), self.argument.substitute(rules))
 
     def reduce(self):
-        #alfa-conversion
+        #capture-avoiding substitution
         if f"{self.argument}" in f"{self.function.body}" and f"{self.argument}" != f"{self.function.variable}":
             self.function = self.function.substitute({f"{self.argument}" : "t"})
             
